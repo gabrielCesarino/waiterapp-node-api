@@ -4,8 +4,18 @@ import { Product } from '../../models/Product';
 
 export async function createProduct(req: Request, res: Response) {
 	try {
-		res.send('OK');
-		console.log(req.body);
+		const imagePath = req.file?.filename;
+		const { name, description, price, category, ingredients } = req.body;
+		const product = await Product.create({
+			name,
+			description,
+			price: Number(price),
+			category,
+			ingredients: JSON.parse(ingredients),
+			imagePath,
+		});
+		res.status(201).json(product);
+		console.log(req.file);
 	} catch (error) {
 		res.sendStatus(500);
 		console.error(error);
